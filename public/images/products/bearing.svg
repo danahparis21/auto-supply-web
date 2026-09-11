@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="100%" stop-color="#27272a"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e4e4e7"/>
+      <stop offset="50%" stop-color="#a1a1aa"/>
+      <stop offset="100%" stop-color="#71717a"/>
+    </linearGradient>
+    <radialGradient id="ball" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#d4d4d8"/>
+      <stop offset="100%" stop-color="#52525b"/>
+    </radialGradient>
+  </defs>
+  <rect width="160" height="160" rx="20" fill="url(#bg)"/>
+  <!-- Outer Race -->
+  <circle cx="80" cy="80" r="58" fill="url(#steel)"/>
+  <circle cx="80" cy="80" r="48" fill="#18181b"/>
+  <!-- Ball Race Track -->
+  <circle cx="80" cy="80" r="44" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
+  <!-- Ball Bearings in Circle -->
+  <circle cx="80" cy="42" r="8" fill="url(#ball)"/>
+  <circle cx="107" cy="53" r="8" fill="url(#ball)"/>
+  <circle cx="118" cy="80" r="8" fill="url(#ball)"/>
+  <circle cx="107" cy="107" r="8" fill="url(#ball)"/>
+  <circle cx="80" cy="118" r="8" fill="url(#ball)"/>
+  <circle cx="53" cy="107" r="8" fill="url(#ball)"/>
+  <circle cx="42" cy="80" r="8" fill="url(#ball)"/>
+  <circle cx="53" cy="53" r="8" fill="url(#ball)"/>
+  <!-- Inner Race -->
+  <circle cx="80" cy="80" r="32" fill="url(#steel)"/>
+  <circle cx="80" cy="80" r="22" fill="#18181b"/>
+</svg>

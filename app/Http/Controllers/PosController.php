@@ -33,11 +33,16 @@ class PosController extends Controller
         }
 
         if ($request->filled('type') && $request->input('type') !== 'All') {
-            $query->where('type', $request->input('type'));
+            $query->where('product_name', 'like', $request->input('type').'%');
         }
 
         $products = $query->get();
-        $categories = Product::select('type')->distinct()->pluck('type');
+        // Build filter chips from first word of each product name
+        $categories = Product::pluck('product_name')
+            ->map(fn ($n) => explode(' ', trim($n))[0])
+            ->unique()
+            ->sort()
+            ->values();
 
         return view('pos.index', [
             'products' => $products,

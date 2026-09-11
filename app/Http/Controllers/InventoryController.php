@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class InventoryController extends Controller
@@ -29,7 +30,7 @@ class InventoryController extends Controller
         }
 
         if ($request->filled('type') && $request->input('type') !== 'All') {
-            $query->where('type', $request->input('type'));
+            $query->where('product_name', 'like', $request->input('type').'%');
         }
 
         if ($request->boolean('low_stock')) {
@@ -37,7 +38,12 @@ class InventoryController extends Controller
         }
 
         $products = $query->paginate(12)->withQueryString();
-        $categories = Product::select('type')->distinct()->pluck('type');
+        // Build filter options from first word of each product name
+        $categories = Product::pluck('product_name')
+            ->map(fn ($n) => explode(' ', trim($n))[0])
+            ->unique()
+            ->sort()
+            ->values();
 
         $totalInventoryCount = Product::count();
         $lowStockCount = Product::lowStock(5)->count();
@@ -69,7 +75,13 @@ class InventoryController extends Controller
             'quantity' => ['required', 'integer', 'min:0'],
             'location' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images/products', 'public');
+            $validated['image'] = 'storage/'.$path;
+        }
 
         $product = Product::create($validated);
 
@@ -100,7 +112,17 @@ class InventoryController extends Controller
             'quantity' => ['required', 'integer', 'min:0'],
             'location' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if it was an uploaded file (not the default SVG)
+            if ($product->image && str_starts_with($product->image, 'storage/')) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $product->image));
+            }
+            $path = $request->file('image')->store('images/products', 'public');
+            $validated['image'] = 'storage/'.$path;
+        }
 
         $oldValues = $product->only(['product_name', 'brand', 'price', 'quantity', 'location']);
         $product->update($validated);

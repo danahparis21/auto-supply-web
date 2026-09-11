@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1e24"/>
+      <stop offset="100%" stop-color="#2a2a35"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f4f4f5"/>
+      <stop offset="50%" stop-color="#d4d4d8"/>
+      <stop offset="100%" stop-color="#a1a1aa"/>
+    </linearGradient>
+    <linearGradient id="thread" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#71717a"/>
+      <stop offset="50%" stop-color="#e4e4e7"/>
+      <stop offset="100%" stop-color="#52525b"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="20" fill="url(#bg)"/>
+  <!-- Hex Head -->
+  <polygon points="80,18 108,30 108,44 80,56 52,44 52,30" fill="url(#metal)" stroke="#3f3f46" stroke-width="1.5"/>
+  <!-- Flange washer -->
+  <ellipse cx="80" cy="54" rx="34" ry="7" fill="url(#metal)" stroke="#3f3f46" stroke-width="1.5"/>
+  <!-- Shaft -->
+  <rect x="68" y="56" width="24" height="20" fill="url(#metal)"/>
+  <!-- Threads -->
+  <g fill="url(#thread)" stroke="#27272a" stroke-width="1">
+    <rect x="66" y="76" width="28" height="6" rx="2"/>
+    <rect x="66" y="84" width="28" height="6" rx="2"/>
+    <rect x="66" y="92" width="28" height="6" rx="2"/>
+    <rect x="66" y="100" width="28" height="6" rx="2"/>
+    <rect x="66" y="108" width="28" height="6" rx="2"/>
+    <rect x="66" y="116" width="28" height="6" rx="2"/>
+    <rect x="66" y="124" width="28" height="6" rx="2"/>
+  </g>
+  <!-- Tip -->
+  <path d="M68 130 L92 130 L86 138 L74 138 Z" fill="#71717a"/>
+</svg>

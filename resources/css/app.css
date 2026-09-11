@@ -1,3 +1,101 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ─── Light Mode Tokens ─────────────────────────────────── */
+:root {
+    --bg-base:          #f4f4f5;
+    --bg-surface:       #ffffff;
+    --bg-elevated:      #f9f9fa;
+    --border:           #e4e4e7;
+    --border-subtle:    #f0f0f1;
+    --text-primary:     #09090b;
+    --text-secondary:   #52525b;
+    --text-muted:       #a1a1aa;
+    --sidebar-bg:       #ffffff;
+    --sidebar-border:   #e4e4e7;
+    --header-bg:        rgba(255,255,255,0.85);
+    --scrollbar-track:  #f4f4f5;
+    --scrollbar-thumb:  #d4d4d8;
+    --scrollbar-hover:  #a1a1aa;
+    /* Brand — deep crimson on white */
+    --brand:            #9f1212;
+    --brand-dim:        rgba(159,18,18,0.10);
+    --brand-border:     rgba(159,18,18,0.25);
+    --brand-glow:       rgba(159,18,18,0.25);
+}
+
+/* ─── Dark Mode Tokens ──────────────────────────────────── */
+.dark {
+    --bg-base:          #0a0a0a;
+    --bg-surface:       #111111;
+    --bg-elevated:      #1a1a1a;
+    --border:           #27272a;
+    --border-subtle:    #1f1f1f;
+    --text-primary:     #fafafa;
+    --text-secondary:   #a1a1aa;
+    --text-muted:       #71717a;
+    --sidebar-bg:       #0f0f0f;
+    --sidebar-border:   #1f1f1f;
+    --header-bg:        rgba(10,10,10,0.85);
+    --scrollbar-track:  #111111;
+    --scrollbar-thumb:  #3f3f46;
+    --scrollbar-hover:  #52525b;
+    /* Brand — bright red pops on dark backgrounds */
+    --brand:            #dc2626;
+    --brand-dim:        rgba(220,38,38,0.15);
+    --brand-border:     rgba(220,38,38,0.30);
+    --brand-glow:       rgba(220,38,38,0.45);
+}
+
+/* ─── Scrollbars ────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb  { background: var(--scrollbar-thumb); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+
+/* ─── Font utility ──────────────────────────────────────── */
+.font-mono-nums {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ─── Brand color utility classes (theme-adaptive) ──────── */
+.text-brand   { color: var(--brand) !important; }
+.bg-brand     { background-color: var(--brand) !important; }
+.border-brand { border-color: var(--brand-border) !important; }
+.shadow-brand { box-shadow: 0 4px 20px var(--brand-glow) !important; }
+
+/* ─── Glowing Brand Button Utility ──────────────────────── */
+.btn-brand, .glowingbutton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 1rem;
+    border-radius: 0.625rem;
+    background: #9f1212 !important;
+    color: #ffffff !important;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    box-shadow: 0 4px 14px rgba(159, 18, 18, 0.45), 0 0 12px rgba(159, 18, 18, 0.25) !important;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-decoration: none;
+    cursor: pointer;
+}
+.dark .btn-brand, .dark .glowingbutton {
+    background: #dc2626 !important;
+    box-shadow: 0 4px 18px rgba(220, 38, 38, 0.55), 0 0 25px rgba(220, 38, 38, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.btn-brand:hover, .glowingbutton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(220, 38, 38, 0.65), 0 0 30px rgba(220, 38, 38, 0.45) !important;
+    filter: brightness(1.1);
+    color: #ffffff !important;
+}
+.btn-brand:active, .glowingbutton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4) !important;
+}

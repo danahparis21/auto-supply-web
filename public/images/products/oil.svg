@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1b18"/>
+      <stop offset="100%" stop-color="#2d2319"/>
+    </linearGradient>
+    <linearGradient id="bottle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="20" fill="url(#bg)"/>
+  <!-- Bottle Neck & Cap -->
+  <rect x="68" y="22" width="24" height="14" rx="3" fill="#991b1b"/>
+  <rect x="65" y="18" width="30" height="8" rx="2" fill="#dc2626"/>
+  <!-- Handle -->
+  <path d="M50 45 C40 45, 38 60, 38 78 C38 95, 42 105, 52 105" fill="none" stroke="#d97706" stroke-width="8" stroke-linecap="round"/>
+  <!-- Bottle Body -->
+  <path d="M56 36 L104 36 L118 60 L118 132 C118 136, 114 140, 110 140 L50 140 C46 140, 42 136, 42 132 L42 60 Z" fill="url(#bottle)"/>
+  <!-- Label -->
+  <rect x="52" y="68" width="56" height="52" rx="6" fill="#18181b" stroke="#713f12" stroke-width="1.5"/>
+  <!-- Oil Drop Icon -->
+  <path d="M80 76 C80 76, 70 89, 70 96 C70 101.5, 74.5 106, 80 106 C85.5 106, 90 101.5, 90 96 C90 89, 80 76, 80 76 Z" fill="url(#gold)"/>
+  <text x="80" y="116" font-family="system-ui, sans-serif" font-size="7" font-weight="800" fill="#fef08a" text-anchor="middle" letter-spacing="0.5">MOTOR OIL</text>
+</svg>

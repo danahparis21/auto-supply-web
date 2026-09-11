@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#c2410c"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="20" fill="url(#bg)"/>
+  <!-- Switch Cylinder -->
+  <rect x="50" y="55" width="60" height="65" rx="10" fill="#334155" stroke="#475569" stroke-width="2"/>
+  <!-- Key Barrel -->
+  <circle cx="80" cy="55" r="22" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="76" y="44" width="8" height="22" rx="2" fill="#0f172a"/>
+  <!-- Wire terminals -->
+  <circle cx="62" cy="128" r="7" fill="url(#copper)"/>
+  <circle cx="80" cy="128" r="7" fill="url(#copper)"/>
+  <circle cx="98" cy="128" r="7" fill="url(#copper)"/>
+  <rect x="60" y="118" width="4" height="10" fill="url(#copper)"/>
+  <rect x="78" y="118" width="4" height="10" fill="url(#copper)"/>
+  <rect x="96" y="118" width="4" height="10" fill="url(#copper)"/>
+  <path d="M72 82 L88 82 L76 96 L88 96" fill="none" stroke="#facc15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

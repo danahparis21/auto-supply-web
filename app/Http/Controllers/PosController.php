@@ -69,12 +69,19 @@ class PosController extends Controller
             $totalSales = 0.0;
             $itemsToProcess = [];
 
-            // 1. Verify stock and calculate total
+            // Consolidate duplicate products in cart items to accurately verify stock
+            $consolidated = [];
             foreach ($validated['items'] as $item) {
-                $product = Product::lockForUpdate()->findOrFail($item['product_id']);
+                $productId = (int) $item['product_id'];
+                $consolidated[$productId] = ($consolidated[$productId] ?? 0) + (int) $item['quantity'];
+            }
 
-                if ($product->quantity < $item['quantity']) {
-                    $errorMsg = "Insufficient stock for '{$product->product_name}'. Available: {$product->quantity}, Requested: {$item['quantity']}";
+            // 1. Verify stock and calculate total
+            foreach ($consolidated as $productId => $quantity) {
+                $product = Product::lockForUpdate()->findOrFail($productId);
+
+                if ($product->quantity < $quantity) {
+                    $errorMsg = "Insufficient stock for '{$product->product_name}'. Available: {$product->quantity}, Requested: {$quantity}";
                     if ($request->wantsJson()) {
                         return response()->json(['success' => false, 'message' => $errorMsg], 422);
                     }
@@ -82,12 +89,12 @@ class PosController extends Controller
                     return back()->withErrors(['items' => $errorMsg]);
                 }
 
-                $subtotal = round($product->price * $item['quantity'], 2);
+                $subtotal = round($product->price * $quantity, 2);
                 $totalSales += $subtotal;
 
                 $itemsToProcess[] = [
                     'product' => $product,
-                    'quantity' => $item['quantity'],
+                    'quantity' => $quantity,
                     'price' => $product->price,
                     'subtotal' => $subtotal,
                 ];

@@ -133,4 +133,110 @@ class AutosupplySystemTest extends TestCase
         $auditResponse->assertOk();
         $auditResponse->assertSee('System Audit Trail');
     }
+
+    public function test_pos_checkout_fails_when_payment_is_insufficient(): void
+    {
+        $product = Product::factory()->create([
+            'price' => 500.00,
+            'quantity' => 10,
+        ]);
+
+        $response = $this->actingAs($this->user)->postJson('/transactions/checkout', [
+            'items' => [
+                ['product_id' => $product->product_id, 'quantity' => 2], // Total 1000.00
+            ],
+            'customer_payment' => 800.00, // Less than 1000.00
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('success', false);
+        $this->assertEquals(10, $product->fresh()->quantity);
+        $this->assertDatabaseMissing('invoices', ['customer_payment' => 800.00]);
+    }
+
+    public function test_pos_checkout_fails_when_stock_is_insufficient(): void
+    {
+        $product = Product::factory()->create([
+            'product_name' => 'Brake Pad Set',
+            'price' => 800.00,
+            'quantity' => 2,
+        ]);
+
+        $response = $this->actingAs($this->user)->postJson('/transactions/checkout', [
+            'items' => [
+                ['product_id' => $product->product_id, 'quantity' => 5], // Exceeds available stock
+            ],
+            'customer_payment' => 5000.00,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('success', false);
+        $this->assertEquals(2, $product->fresh()->quantity);
+        $this->assertDatabaseMissing('invoices', ['total_sales' => 4000.00]);
+    }
+
+    public function test_inventory_store_validates_required_fields(): void
+    {
+        $response = $this->actingAs($this->user)->post('/inventory', []);
+
+        $response->assertSessionHasErrors(['product_name', 'type', 'price', 'quantity']);
+    }
+
+    public function test_pos_checkout_consolidates_duplicate_items_and_prevents_oversell(): void
+    {
+        $product = Product::factory()->create([
+            'product_name' => 'Wiper Blade 22"',
+            'price' => 250.00,
+            'quantity' => 3, // only 3 units in stock
+        ]);
+
+        // Cart sends 2 units + 2 units of the same product (total 4 > 3)
+        $response = $this->actingAs($this->user)->postJson('/transactions/checkout', [
+            'items' => [
+                ['product_id' => $product->product_id, 'quantity' => 2],
+                ['product_id' => $product->product_id, 'quantity' => 2],
+            ],
+            'customer_payment' => 2000.00,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('success', false);
+        $this->assertStringContainsString('Insufficient stock', $response->json('message'));
+        $this->assertEquals(3, $product->fresh()->quantity);
+    }
+
+    public function test_pos_checkout_consolidates_duplicate_items_and_deducts_accurately(): void
+    {
+        $product = Product::factory()->create([
+            'product_name' => 'Synthetic Motor Oil 1L',
+            'price' => 400.00,
+            'quantity' => 10,
+        ]);
+
+        // Cart sends duplicate lines: 2 + 3 = 5 units
+        $response = $this->actingAs($this->user)->postJson('/transactions/checkout', [
+            'items' => [
+                ['product_id' => $product->product_id, 'quantity' => 2],
+                ['product_id' => $product->product_id, 'quantity' => 3],
+            ],
+            'customer_payment' => 2500.00,
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonPath('success', true);
+        // Stock should be 10 - 5 = 5
+        $this->assertEquals(5, $product->fresh()->quantity);
+        // Total should be 5 * 400 = 2000.00, Change = 500.00
+        $this->assertDatabaseHas('invoices', [
+            'total_sales' => 2000.00,
+            'customer_payment' => 2500.00,
+            'customer_change' => 500.00,
+        ]);
+        // Only one consolidated sale record with quantity_sold = 5
+        $this->assertDatabaseHas('sales', [
+            'product_id' => $product->product_id,
+            'quantity_sold' => 5,
+            'subtotal' => 2000.00,
+        ]);
+    }
 }

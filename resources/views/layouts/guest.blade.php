@@ -11,31 +11,53 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-panel {
+            background: rgba(18, 18, 22, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .light .glass-panel, html:not(.dark) .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            color: #18181b !important;
+        }
+        .car-hero-overlay-dark {
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(10, 10, 12, 0.5) 60%, rgba(10, 10, 12, 0.98) 100%),
+                        linear-gradient(to top, rgba(10, 10, 12, 0.95) 0%, rgba(10, 10, 12, 0.4) 40%, transparent 100%);
+        }
+        .car-hero-overlay-light {
+            background: linear-gradient(to right, transparent 88%, rgba(228, 228, 231, 0.35) 100%);
+            opacity: 0.35;
+        }
+        .hero-text-shadow {
+            text-shadow: none;
+        }
+        .dark .hero-text-shadow {
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
+        }
+        .hero-body-shadow {
+            text-shadow: none;
+        }
+        .dark .hero-body-shadow {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
     </style>
 </head>
-<body class="min-h-screen antialiased flex flex-col justify-center items-center p-4 relative overflow-hidden"
+<body class="min-h-screen antialiased flex relative overflow-x-hidden"
       style="background: var(--bg-base); color: var(--text-primary);">
 
-    <!-- Ambient red glows -->
-    <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-30"
-         style="background: radial-gradient(circle, #9f1212 0%, transparent 70%);"></div>
-    <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20"
-         style="background: radial-gradient(circle, #7f0c0c 0%, transparent 70%);"></div>
-    <!-- Subtle grid overlay -->
-    <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
-         style="background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px;"></div>
-
-    <!-- Dark/Light toggle (top-right) -->
+    <!-- Dark/Light Theme Toggle (Floating Top-Right) -->
     <button id="guest-theme-toggle"
             title="Toggle dark/light mode"
-            class="absolute top-5 right-5 p-2 rounded-lg transition-colors z-10"
-            style="background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary);">
+            class="fixed top-5 right-5 p-2.5 rounded-xl transition-all z-50 glass-panel shadow-lg hover:scale-105 cursor-pointer"
+            style="color: var(--text-secondary);">
         <svg id="g-icon-dark" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
         </svg>
@@ -44,44 +66,132 @@
         </svg>
     </button>
 
-    <div class="w-full max-w-md relative z-10">
-        <!-- Logo & Branding -->
-        <div class="text-center mb-8">
-            <!-- AMS Logo -->
-            <div class="flex justify-center mb-4">
-                <div class="w-20 h-20 rounded-2xl flex items-center justify-center shadow-2xl border"
-                     style="background: var(--bg-surface); border-color: var(--border); box-shadow: 0 0 40px rgba(159,18,18,0.2);">
-                    <img src="{{ asset('images/AMS_Logo.png') }}"
-                         alt="AMS Logo"
-                         class="w-12 h-12 object-contain">
+    <!-- Split Screen Layout -->
+    <div class="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 relative">
+
+        <!-- Left Supercar Hero Section (Desktop) -->
+        <div class="hidden lg:flex lg:col-span-7 relative flex-col justify-between p-12 overflow-hidden select-none bg-neutral-100 dark:bg-[#09090b]">
+
+            <!-- Background Supercar Images (Adaptive to Theme) -->
+            <!-- Dark Mode Hero: Ford GT Moody Crimson Studio -->
+            <img src="{{ asset('images/products/car-blackbg.jpg') }}"
+                 alt="High Performance Auto"
+                 class="hidden dark:block absolute inset-0 w-full h-full object-cover object-center transform scale-100 hover:scale-105 transition-transform duration-1000 ease-out">
+
+            <!-- Light Mode Hero: Studio Red Ferrari -->
+            <img src="{{ asset('images/products/car-whitebg.jpg') }}"
+                 alt="High Performance Auto"
+                 class="block dark:hidden absolute inset-0 w-full h-full object-cover object-center transform scale-100 hover:scale-105 transition-transform duration-1000 ease-out">
+
+            <!-- Gradients / Vignette Overlay -->
+            <div class="hidden dark:block absolute inset-0 car-hero-overlay-dark pointer-events-none"></div>
+            <div class="block dark:hidden absolute inset-0 car-hero-overlay-light pointer-events-none"></div>
+
+            <!-- Top Pill Badge -->
+            <div class="relative z-10 flex items-center space-x-3">
+                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest backdrop-blur-md bg-red-600/10 dark:bg-red-950/40 border border-red-600/30 dark:border-red-500/40 text-red-700 dark:text-red-400 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-red-600 mr-2 animate-ping"></span>
+                    <span>Engineered For Performance</span>
+                </span>
+                <span class="text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-400">
+                    AMS Enterprise v2.4
+                </span>
+            </div>
+
+            <!-- Bottom Supercar Showcase Content -->
+            <div class="relative z-10 max-w-xl space-y-4 pt-16">
+                <div>
+                    <p class="text-xs font-black tracking-widest uppercase text-red-600 dark:text-red-500 mb-1">
+                        JOY JEFFREY AUTO SUPPLY
+                    </p>
+                    <h1 class="text-4xl xl:text-5xl font-black tracking-tight text-neutral-900 dark:text-white uppercase leading-tight hero-text-shadow">
+                        Journey Beyond.
+                    </h1>
+                </div>
+
+                <p class="text-sm font-bold text-neutral-800 dark:text-neutral-300 leading-relaxed max-w-lg hero-body-shadow">
+                    Precision inventory control, high-speed POS ticketing, and certified automotive replacement parts for Toyota, Mitsubishi, Isuzu, and Honda.
+                </p>
+
+                <!-- Automotive Feature Badges -->
+                <div class="flex flex-wrap gap-2.5 pt-2">
+                    <span class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-black text-neutral-900 dark:text-neutral-200 bg-white/95 dark:bg-neutral-900/80 border border-neutral-300 dark:border-white/10 shadow-sm backdrop-blur-md">
+                        <svg class="w-3.5 h-3.5 text-red-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        Thermal-Ready POS
+                    </span>
+                    <span class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-black text-neutral-900 dark:text-neutral-200 bg-white/95 dark:bg-neutral-900/80 border border-neutral-300 dark:border-white/10 shadow-sm backdrop-blur-md">
+                        <svg class="w-3.5 h-3.5 text-red-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                        Real-Time Stock Alerts
+                    </span>
+                    <span class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-black text-neutral-900 dark:text-neutral-200 bg-white/95 dark:bg-neutral-900/80 border border-neutral-300 dark:border-white/10 shadow-sm backdrop-blur-md">
+                        <svg class="w-3.5 h-3.5 text-red-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        Role-Based Access
+                    </span>
                 </div>
             </div>
-            <h1 class="text-2xl font-extrabold tracking-tight" style="color: var(--text-primary);">JOY JEFFREY</h1>
-            <p class="text-xs font-bold tracking-widest uppercase mt-0.5" style="color: #9f1212;">AUTO SUPPLY MANAGEMENT SYSTEM</p>
-            <p class="text-xs mt-1" style="color: var(--text-muted);">Batangas State University ARASOF-Nasugbu</p>
         </div>
 
-        <!-- Auth Card -->
-        <div class="p-8 rounded-3xl shadow-2xl backdrop-blur-xl"
-             style="background: var(--bg-surface); border: 1px solid var(--border);">
-            {{ $slot }}
+        <!-- Right Login Panel (Desktop & Mobile) -->
+        <div class="col-span-1 lg:col-span-5 flex flex-col justify-between p-6 sm:p-10 lg:p-14 relative z-10 min-h-screen"
+             style="background: var(--bg-surface); border-left: 1px solid var(--border);">
+
+            <!-- Mobile Supercar Blurred Background (hidden on lg) -->
+            <div class="lg:hidden absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-20">
+                <img src="{{ asset('images/products/car-blackbg.jpg') }}" alt="Auto Background" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+            </div>
+
+            <!-- Top Header & AMS Logo -->
+            <div class="relative z-10 pt-2">
+                <div class="flex items-center space-x-3 mb-8">
+                    <!-- AMS Logo Badge with Crimson Glow -->
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center p-2 transition-transform hover:scale-105"
+                         style="background: var(--bg-elevated); border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(220, 38, 38, 0.25);">
+                        <img src="{{ asset('images/AMS_Logo.png') }}"
+                             alt="AMS Logo"
+                             class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h2 class="text-base font-black tracking-tight uppercase" style="color: var(--text-primary);">
+                            JOY JEFFREY
+                        </h2>
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest" style="color: var(--brand);">
+                            AUTO SUPPLY & POS
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Auth Content ($slot) -->
+            <div class="relative z-10 my-auto py-6 max-w-md w-full mx-auto">
+                {{ $slot }}
+            </div>
+
+            <!-- Bottom System Info Footer -->
+            <div class="relative z-10 pt-6 mt-4 border-t flex flex-col sm:flex-row items-center justify-between text-[11px] gap-2"
+                 style="border-color: var(--border); color: var(--text-muted);">
+                <span>Joy Jeffrey Auto Supply</span>
+                <span>Team HotwWheels</span>
+            </div>
         </div>
     </div>
 
+    <!-- Theme Switcher Script -->
     <script>
-        /* ── Dark / Light mode toggle (guest) ────────────── */
-        const gHtml     = document.documentElement;
-        const gBtn      = document.getElementById('guest-theme-toggle');
-        const gIconDark = document.getElementById('g-icon-dark');
-        const gIconLight= document.getElementById('g-icon-light');
+        const gHtml      = document.documentElement;
+        const gBtn       = document.getElementById('guest-theme-toggle');
+        const gIconDark  = document.getElementById('g-icon-dark');
+        const gIconLight = document.getElementById('g-icon-light');
 
         function gApplyTheme(mode) {
             if (mode === 'dark') {
                 gHtml.classList.add('dark');
+                gHtml.classList.remove('light');
                 gIconLight.classList.remove('hidden');
                 gIconDark.classList.add('hidden');
             } else {
                 gHtml.classList.remove('dark');
+                gHtml.classList.add('light');
                 gIconLight.classList.add('hidden');
                 gIconDark.classList.remove('hidden');
             }

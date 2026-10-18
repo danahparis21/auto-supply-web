@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AutoSupply - Test Plan v2</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', Arial, sans-serif; font-size: 11pt; color: #1a1a1a; background: #fff; }
+    .page { max-width: 820px; margin: 0 auto; padding: 56px 64px; }
+    .cover { text-align: center; padding: 80px 0 60px; border-bottom: 3px solid #1e3a5f; margin-bottom: 48px; }
+    .cover .label { font-size: 10pt; letter-spacing: 2px; text-transform: uppercase; color: #1e3a5f; font-weight: 600; margin-bottom: 16px; }
+    .cover h1 { font-size: 22pt; font-weight: 700; color: #1e3a5f; line-height: 1.3; margin-bottom: 10px; }
+    .cover h2 { font-size: 13pt; font-weight: 400; color: #444; margin-bottom: 32px; }
+    .cover .meta { font-size: 10pt; color: #666; line-height: 1.8; }
+    .version-badge { display: inline-block; background: #1e3a5f; color: #fff; font-size: 10pt; font-weight: 600; padding: 4px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .change-badge { display: inline-block; background: #e8f4e8; color: #2d6a2d; font-size: 9pt; font-weight: 600; padding: 2px 10px; border-radius: 12px; border: 1px solid #b2d8b2; margin-left: 8px; vertical-align: middle; }
+    .changelog { background: #f0f7ff; border-left: 4px solid #1e3a5f; border-radius: 6px; padding: 16px 20px; margin-bottom: 40px; font-size: 10pt; }
+    .changelog h4 { font-size: 10pt; font-weight: 700; color: #1e3a5f; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .changelog ul { padding-left: 18px; }
+    .changelog li { margin-bottom: 6px; color: #333; }
+    h2.section { font-size: 14pt; font-weight: 700; color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 6px; margin: 40px 0 16px; }
+    h3.sub { font-size: 11.5pt; font-weight: 700; color: #1e3a5f; margin: 24px 0 10px; }
+    h4.subsub { font-size: 10.5pt; font-weight: 600; color: #333; margin: 16px 0 8px; }
+    p { margin-bottom: 10px; line-height: 1.7; }
+    ul, ol { padding-left: 22px; margin-bottom: 12px; }
+    li { margin-bottom: 5px; line-height: 1.65; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 10pt; }
+    thead tr { background: #1e3a5f; color: #fff; }
+    thead th { padding: 9px 12px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f4f7fb; }
+    tbody td { padding: 8px 12px; border-bottom: 1px solid #dde3ec; vertical-align: top; }
+    code { font-family: monospace; background: #f0f0f0; padding: 1px 4px; border-radius: 3px; }
+    @media print { body { padding: 0; } .page { padding: 40px 48px; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="cover">
+    <div class="label">Software Quality Assurance</div>
+    <span class="version-badge">Version 2.0</span>
+    <h1>Test Plan Document</h1>
+    <h2>AutoSupply POS and Inventory Management System<br>(Web-Based)</h2>
+    <div class="meta">
+      Revised: October 2026<br>
+      Project Team: Jared Abellera, Mica Danah Paris, Gemwil Alcaraz,<br>
+      Roel Bendana, Sofia Tapongco, Theresa Valiente, Erich Castillo
+    </div>
+  </div>
+
+  <div class="changelog">
+    <h4>v2.0 - Changes from v1</h4>
+    <ul>
+      <li><strong>Section 1.1.2 (Out of Scope):</strong> Removed "Product image upload/display" from the Out of Scope list. The feature is implemented in the system and covered by test case TC-INV-006.</li>
+      <li><strong>Section 1.1.1 (In Scope):</strong> Updated Inventory Catalog description to include product image as part of the managed fields.</li>
+      <li><strong>Section 4.2 (Test Environment):</strong> Corrected PHP version from 8.3 to <strong>8.5</strong> to match the actual runtime (PHP 8.5.10).</li>
+      <li><strong>Section 4.2 (Test Environment):</strong> Clarified database setup - MySQL 8.4 via Docker is used for all automated PHPUnit tests; SQLite is only for local ad-hoc development, not the QA test suite.</li>
+    </ul>
+  </div>
+
+  <h2 class="section">1 &nbsp; Introduction</h2>
+  <p>The Test Plan is designed to prescribe the scope, approach, resources, and schedule of all testing activities of the project <strong>AutoSupply POS and Inventory Management System</strong>.</p>
+  <p>The plan identifies the items to be tested, the features to be tested, the types of testing to be performed, the personnel responsible for testing, the resources and schedule required to complete testing, and the risks associated with the plan.</p>
+
+  <h3 class="sub">1.1 Scope</h3>
+  <h4 class="subsub">1.1.1 In Scope</h4>
+  <p>All the features of the AutoSupply POS and Inventory Management System which were defined in the software requirement specification are needed to be tested:</p>
+
+  <table>
+    <thead><tr><th style="width:4%">No.</th><th style="width:22%">Module Name</th><th style="width:18%">Applicable Roles</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>User Authentication</td><td>Admin, Cashier</td><td>Sign in/out using username or email, session handling, and password validation; new user can register an account (name, username, email, password); user can ask for a password-reset link by email; account will lock for a short time if login is wrong many times; session will end automatically if the user is not active; user can view and update their own account details and password; password is saved using secure hashing, not plain text.</td></tr>
+      <tr><td>2</td><td>Dashboard</td><td>Admin, Cashier</td><td>Today's revenue and order count, top-selling product, low-stock alert count, total catalog (SKU) count, 7-day daily sales trend chart, revenue-share chart, top 5 best-selling parts chart, and a low-stock warnings list with a quick restock action.</td></tr>
+      <tr><td>3</td><td>Inventory Catalog</td><td>Admin, Cashier</td><td>Add, update, delete, search, and restock parts (product name, additional name/specs, category, brand, price, quantity, shelf location, description, and product image); filter by category and by low-stock status; the product list has pages and shows the total number of products, low-stock items, and out-of-stock items.</td></tr>
+      <tr><td>4</td><td>POS Terminal</td><td>Admin, Cashier</td><td>Search/filter parts, build an active ticket, adjust order item quantities, accept customer payment (manual entry, quick-add buttons, or exact amount), compute change, record the sale, generate the invoice, and print the receipt.</td></tr>
+      <tr><td>5</td><td>Sales Records &amp; Invoices</td><td>Admin, Cashier</td><td>View grouped (invoice-level) sales and individual product sales, filter by date range and search, and view/print individual receipts; can search by invoice number, product, or user; each invoice shows the staff/owner account who made the sale; the invoice list has pages.</td></tr>
+      <tr><td>6</td><td>Stock Auto-Deduction System</td><td>Automatic</td><td>Automatic reduction of product quantity after a recorded sale; this is done in one single step so the stock will never go below zero, even if two sales happen at almost the same time.</td></tr>
+      <tr><td>7</td><td>Audit Trail</td><td>Admin, Cashier</td><td>Logging of product inserts/updates, restocks, and POS-sale quantity deductions, with old-value vs. new-value tracking, for accountability; the audit trail page also has pages (pagination).</td></tr>
+      <tr><td>8</td><td>Backend Services</td><td>System</td><td>Controllers/routes handling checkout and recording of sales, inventory CRUD and restock, dashboard/report queries, and audit logging.</td></tr>
+      <tr><td>9</td><td>Data Integrity &amp; Business Rules</td><td>System</td><td>Stock will not go below zero when a sale is recorded, the data connecting users, products, invoices, and sales are kept correct, and the money amounts are computed consistently without rounding errors.</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="subsub">1.1.2 Out of Scope</h4>
+  <p>These features are not to be tested because they are not included in the software requirement specification:</p>
+  <ul>
+    <li>Third-party payment gateway integration (system records cash payment/change only)</li>
+    <li>Multi-branch/multi-store synchronization</li>
+    <li>Native mobile application version</li>
+    <li>Hardware interfaces (barcode scanners, receipt printers) unless explicitly added to requirements</li>
+    <li>Server infrastructure security hardening and penetration testing</li>
+    <li>Website performance/load testing beyond normal functional use</li>
+    <li>Many users using the system at the same time on different devices (the system is made for only one computer and one user at a time)</li>
+    <li>HTTPS/TLS security between the browser and the server (the system only runs on the local computer; the computer's own user account and file permissions will protect it instead)</li>
+    <li>Sending password-reset emails, unless an email-sending service is set up (if it is not set up, the reset request will just be saved in the log instead of being emailed)</li>
+  </ul>
+
+  <h3 class="sub">1.2 Quality Objective</h3>
+  <p>To verify the functionality of the AutoSupply POS and Inventory Management System, the project will focus on testing the inventory, transaction, and reporting modules, to guarantee all these operations can work normally in a real business environment.</p>
+
+  <h3 class="sub">1.3 Roles and Responsibilities</h3>
+  <p>The project will use the assigned student developers and testers within the team to conduct testing.</p>
+  <table>
+    <thead><tr><th>No.</th><th>Member</th><th>Tasks</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Jared Jeffrey Abellera - Team Lead</td><td>Manage the whole QA effort and define testing priorities; acquire resources needed for testing (time, environment, personnel); give final sign-off before submission, based on the exit criteria in 2.4.</td></tr>
+      <tr><td>2</td><td>Mica Danah Paris - Developer</td><td>Set up and maintain the test environments (Docker/MySQL QA); implement automated backend test scripts (PHPUnit feature tests) alongside test cases designed by QA; fix defects reported by QA and resolve issues found during regression testing.</td></tr>
+      <tr><td>3</td><td>Gemwil Alcaraz - Quality Assurance</td><td>Identify appropriate test techniques and design test cases; execute tests, log results, and report defects with steps to reproduce.</td></tr>
+      <tr><td>4</td><td>Roel Bendana - Quality Assurance</td><td>Execute tests, log results, and report defects with steps to reproduce; support regression testing after defect fixes or feature changes.</td></tr>
+      <tr><td>5</td><td>Sofia La-Arni Tapongco - System Analyst</td><td>Verify that test cases trace back to the FRS/NFRS requirements; confirm the testing process is meeting the specified requirements.</td></tr>
+      <tr><td>6</td><td>Theresa Valiente - Librarian (Documentation)</td><td>Maintain and version the test plan, test case documents, and test design specifications.</td></tr>
+      <tr><td>7</td><td>Erich Castillo - Librarian (Documentation)</td><td>Maintain test result reports, defect reports, and release notes.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="section">2 &nbsp; Test Methodology</h2>
+
+  <h3 class="sub">2.1 Overview</h3>
+  <p>This section describes the levels of testing, defect handling process, and criteria used to determine whether the AutoSupply POS and Inventory Management System is ready for release.</p>
+
+  <h3 class="sub">2.2 Test Levels</h3>
+  <p>For the AutoSupply POS and Inventory Management System, the following levels of testing will be conducted:</p>
+  <ul>
+    <li><strong>Unit Testing</strong> - individual backend functions (e.g., stock deduction, total computation) tested in isolation</li>
+    <li><strong>Integration Testing</strong> - frontend, backend, and database modules combined and tested as a group</li>
+    <li><strong>System Testing</strong> - the complete, integrated web application evaluated against the specified requirements</li>
+    <li><strong>Backend/Controller Testing</strong> - Laravel controllers and business logic (checkout, inventory CRUD, restock, audit logging) tested via PHPUnit feature tests</li>
+    <li><strong>Smoke Testing</strong> - basic sanity checks after each build/deployment</li>
+    <li><strong>Regression Testing</strong> - re-testing affected modules after defect fixes or feature changes</li>
+    <li><strong>User Acceptance Testing (UAT)</strong> - validation with the adviser and/or end-user representative before final submission</li>
+    <li><strong>Usability Testing</strong> - checking if the layout looks good and consistent on desktop and tablet screens, and if common tasks (like recording a sale or adding a product) can be done in just a few steps</li>
+    <li><strong>Performance Testing</strong> - checking if pages and the dashboard load in 3 seconds or less under normal use, and if the product, invoice, and audit-trail lists still load fast even with many records, using pagination</li>
+    <li><strong>Security Testing</strong> - checking if the password is hashed safely, if user input is checked/cleaned to prevent SQL injection and XSS, if the session ends after being inactive, and if login locks after many wrong tries</li>
+    <li><strong>Reliability &amp; Data Integrity Testing</strong> - checking if stock deduction works correctly and never goes negative, if the data connecting users, products, invoices, and sales stay correct, and if money amounts are computed consistently</li>
+    <li><strong>Compatibility Testing</strong> - checking if the system works correctly on the latest Chrome, Edge, and Firefox browsers when opened locally (example: http://localhost)</li>
+  </ul>
+
+  <h3 class="sub">2.3 Bug Triage</h3>
+  <p>Reported defects are logged with steps to reproduce, severity, and module affected. The team reviews and prioritizes defects before assigning them for a fix, following this severity classification: Severity 1 - Critical/Blocking, Severity 2 - Major, Severity 3 - Minor, Severity 4 - Cosmetic.</p>
+
+  <h3 class="sub">2.4 Acceptance Criteria</h3>
+  <h4 class="subsub">2.4.1 Entry-Exit Criteria</h4>
+  <ul>
+    <li><strong>Entry Criteria</strong> for the start of testing will be a hand-off from the developers.</li>
+    <li><strong>Exit Criteria</strong> for the end of testing would be:
+      <ul>
+        <li>No open Severity 1 or Severity 2 defects</li>
+        <li>100% test completion</li>
+        <li>At least 95% test pass rate</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4 class="subsub">2.4.2 Suspension Criteria and Resumption Requirements</h4>
+  <p>If the team members report that 40% or more of the executed test cases failed, testing will be suspended until the development team fixes all the failed cases. Testing resumes once a fixed build is re-deployed to the test environment.</p>
+
+  <h3 class="sub">2.5 Test Completion / Sign-off</h3>
+  <ul>
+    <li>Specifies the criteria that denote a successful completion of a test phase.</li>
+    <li>Mandatory run rate of 100% unless there is a clear, documented reason to waive a test case.</li>
+    <li>Pass rate of 95% is mandatory; achieving the pass rate is required for sign-off.</li>
+  </ul>
+
+  <h3 class="sub">2.6 Project Task, Estimation, and Schedule</h3>
+  <table>
+    <thead><tr><th>Task</th><th>Members</th><th>Planned Dates</th><th>Est. Effort (man-hours)</th></tr></thead>
+    <tbody>
+      <tr><td>Create the test specification</td><td>Sofia La-Arni Tapongco (System Analyst); Gemwil Alcaraz, Roel Bendana (QA)</td><td>Oct 21-22, 2026</td><td>~48</td></tr>
+      <tr><td>Perform test execution</td><td>Gemwil Alcaraz, Roel Bendana (QA); Mica Danah Paris (Developer, environment support)</td><td>Oct 23-26, 2026</td><td>~48</td></tr>
+      <tr><td>Bug Fixing &amp; Retesting</td><td>Mica Danah Paris (Developer); Gemwil Alcaraz, Roel Bendana (QA)</td><td>Oct 27-28, 2026</td><td>~48</td></tr>
+      <tr><td>Deployment Testing</td><td>Mica Danah Paris (Developer); Gemwil Alcaraz, Roel Bendana (QA)</td><td>Oct 29, 2026</td><td>~24</td></tr>
+      <tr><td>Test Report</td><td>Gemwil Alcaraz, Roel Bendana (QA); Erich Castillo (Documentation)</td><td>Oct 26 &amp; Nov 3-4, 2026</td><td>~48</td></tr>
+      <tr><td>Test Delivery</td><td>Jared Jeffrey Abellera (Team Lead)</td><td>Nov 4-5, 2026</td><td>~16</td></tr>
+      <tr><td colspan="3"><strong>Total</strong></td><td><strong>~232</strong></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9.5pt; color:#555;">Dates above follow the Software Quality Stage of the project timeline (Oct 21-Nov 5, 2026). Effort estimates assume an 8-hour day per assigned member; these are rough estimates for planning purposes.</p>
+
+  <h2 class="section">3 &nbsp; Test Deliverables</h2>
+
+  <h3 class="sub">Before the Testing Phase</h3>
+  <ul>
+    <li>Test plan document (this document)</li>
+    <li>Test case documents</li>
+    <li>Test design specifications</li>
+  </ul>
+
+  <h3 class="sub">During Testing</h3>
+  <ul>
+    <li><strong>Testing tool:</strong> PHPUnit (Laravel's built-in testing framework, run via <code>php artisan test</code>)</li>
+    <li>Test data - to be provided by the assigned developer(s)</li>
+    <li>Test Traceability matrix / Defect-Test monitoring tool for logging errors and execution progress</li>
+  </ul>
+
+  <h3 class="sub">After the Testing Cycles</h3>
+  <ul>
+    <li>Test results/reports</li>
+    <li>Defect report completion</li>
+    <li>Installation/deployment guide for the web application</li>
+    <li>Release notes</li>
+  </ul>
+
+  <h2 class="section">4 &nbsp; Resource &amp; Environment Needs</h2>
+
+  <h3 class="sub">4.1 Testing Tools</h3>
+  <table>
+    <thead><tr><th>No.</th><th>Resource</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Server</td><td>Local application server (Laravel Sail) hosting the Laravel application; MySQL 8.4 database running in Docker. Based on the system design, there are two setups: a Development setup that uses a local SQLite database file for ad-hoc work, and a Quality-Assurance (QA) setup where the Laravel app and MySQL database run in their own Docker containers, managed using Docker Compose.</td></tr>
+      <tr><td>2</td><td>Test Tool</td><td>PHPUnit (<code>php artisan test</code>) for backend/controller testing; browser developer tools for frontend inspection; Laravel Artisan Tinker for ad hoc data checks.</td></tr>
+      <tr><td>3</td><td>Network</td><td>Stable LAN/internet connection for accessing the web application during testing. The system only runs on the local computer, so internet is not needed; internet is only needed if testing the password-reset email feature, and only after an email service is already set up.</td></tr>
+      <tr><td>4</td><td>Computers</td><td>Devices with modern web browsers for cross-browser testing.</td></tr>
+      <tr><td>5</td><td>Containerization</td><td>Docker and Docker Compose, used to run the QA environment (the Laravel app container, MySQL 8.4 container, and a phpMyAdmin container to view the database directly). This can be started with a single build/run command.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">4.2 Test Environment <span class="change-badge">Updated in v2</span></h3>
+  <p>For backend testing, the required tool is PHPUnit, run via <code>php artisan test</code>. Test files are organized under <code>tests/Feature</code> and <code>tests/Unit</code> and are to be shared with the team via the group repository for review.</p>
+  <p>Based on the system design, there are two environment setups: a <strong>Development</strong> setup that uses a local SQLite database file (no Docker container needed) for quick local development only, and a <strong>Quality-Assurance (QA)</strong> setup where the Laravel app and a MySQL 8.4 database each run inside their own Docker container, managed using Docker Compose, together with a phpMyAdmin container to view the database directly. All automated PHPUnit tests run against the MySQL QA database (configured via <code>.env.testing</code>), not SQLite. To switch between these two setups, only the environment settings need to change, not the code itself.</p>
+  <p>The following are required for testing the web-based system, in addition to the test machine's base software:</p>
+  <ul>
+    <li>A modern web browser (Chrome, Edge, or Firefox - latest version)</li>
+    <li>MySQL 8.4 running inside Docker (used for the QA/automated test environment)</li>
+    <li><strong>PHP 8.5</strong>, Composer, and Node.js/npm (for the Vite-based frontend build)</li>
+    <li>Windows 10/11 or an equivalent OS capable of running the above</li>
+    <li>Docker Desktop (or Docker Engine) and Docker Compose, needed for the Docker-based MySQL QA environment</li>
+  </ul>
+
+  <div style="margin-top: 60px; padding-top: 16px; border-top: 1px solid #ccc; font-size: 9pt; color: #888; text-align: center;">
+    AutoSupply POS and Inventory Management System &nbsp;|&nbsp; Test Plan v2.0 &nbsp;|&nbsp; October 2026
+  </div>
+
+</div>
+</body>
+</html>

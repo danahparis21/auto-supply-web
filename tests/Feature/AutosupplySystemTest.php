@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AutosupplySystemTest extends TestCase
@@ -238,5 +240,68 @@ class AutosupplySystemTest extends TestCase
             'quantity_sold' => 5,
             'subtotal' => 2000.00,
         ]);
+    }
+
+    /** TC-INV-006: image upload accepts supported formats on product store */
+    public function test_product_store_accepts_image_upload(): void
+    {
+        Storage::fake('public');
+
+        $response = $this->actingAs($this->user)->post('/inventory', [
+            'product_name' => 'Oil Filter HF204',
+            'type' => 'Filtration',
+            'brand' => 'K&N',
+            'price' => 450.00,
+            'quantity' => 10,
+            'image' => UploadedFile::fake()->image('filter.jpg', 200, 200),
+        ]);
+
+        $response->assertRedirect('/inventory');
+        $this->assertDatabaseHas('products', ['product_name' => 'Oil Filter HF204']);
+
+        $product = Product::where('product_name', 'Oil Filter HF204')->firstOrFail();
+        $this->assertStringStartsWith('storage/images/products/', $product->image);
+        Storage::disk('public')->assertExists(str_replace('storage/', '', $product->image));
+    }
+
+    /** TC-INV-006: image upload accepts supported formats on product update */
+    public function test_product_update_accepts_image_upload(): void
+    {
+        Storage::fake('public');
+
+        $product = Product::factory()->create([
+            'product_name' => 'Brake Disc',
+            'type' => 'Braking',
+            'price' => 1200.00,
+            'quantity' => 5,
+        ]);
+
+        $response = $this->actingAs($this->user)->put("/inventory/{$product->product_id}", [
+            'product_name' => 'Brake Disc',
+            'type' => 'Braking',
+            'price' => 1200.00,
+            'quantity' => 5,
+            'image' => UploadedFile::fake()->image('disc.png', 300, 300),
+        ]);
+
+        $response->assertRedirect('/inventory');
+        $this->assertStringStartsWith('storage/images/products/', $product->fresh()->image);
+    }
+
+    /** TC-INV-006: image upload rejects unsupported file types */
+    public function test_product_store_rejects_non_image_upload(): void
+    {
+        Storage::fake('public');
+
+        $response = $this->actingAs($this->user)->post('/inventory', [
+            'product_name' => 'Bad Upload Product',
+            'type' => 'Misc',
+            'price' => 100.00,
+            'quantity' => 1,
+            'image' => UploadedFile::fake()->create('malware.pdf', 100, 'application/pdf'),
+        ]);
+
+        $response->assertSessionHasErrors(['image']);
+        $this->assertDatabaseMissing('products', ['product_name' => 'Bad Upload Product']);
     }
 }

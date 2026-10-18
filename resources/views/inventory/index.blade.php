@@ -256,127 +256,246 @@
     </div>
 
     <!-- Modal: Add New Product -->
-    <div x-show="showAddModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm" style="background: rgba(0,0,0,0.5);">
-        <div class="rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4" style="background: var(--bg-surface); border: 1px solid var(--border);">
+    <div x-show="showAddModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm" style="background: rgba(0,0,0,0.65);">
+        <div class="rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto" style="background: var(--bg-surface); border: 1px solid var(--border);">
             <div class="flex items-center justify-between pb-3" style="border-bottom: 1px solid var(--border);">
-                <h3 class="text-base font-bold" style="color: var(--text-primary);">Add New Auto Part</h3>
+                <div>
+                    <h3 class="text-base font-extrabold" style="color: var(--text-primary);">Add New Auto Part</h3>
+                    <p class="text-xs" style="color: var(--text-muted);">Fill in the part details and upload a photo for the catalog</p>
+                </div>
                 <button @click="showAddModal = false" style="color: var(--text-muted);"
                         onmouseover="this.style.color='var(--text-primary)';"
                         onmouseout="this.style.color='var(--text-muted)';">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-            <form method="POST" action="{{ route('inventory.store') }}" enctype="multipart/form-data" class="space-y-3 text-xs">
+
+            <form method="POST" action="{{ route('inventory.store') }}" enctype="multipart/form-data" class="space-y-4 text-xs">
                 @csrf
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Product Name *</label>
-                        <input type="text" name="product_name" required placeholder="e.g. Wheel Bearing 6204" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+
+                <!-- Fixed-Dimension Centered Image Upload Square -->
+                <div class="flex flex-col items-center justify-center pt-1 pb-2">
+                    <div
+                        @click="$refs.addImageInput.click()"
+                        class="rounded-2xl border-2 border-dashed flex items-center justify-center cursor-pointer transition-all relative overflow-hidden group shadow-sm"
+                        style="width: 130px; height: 130px; background: var(--bg-elevated); border-color: var(--border);"
+                        onmouseover="this.style.borderColor='var(--brand)'; this.style.background='var(--bg-base)';"
+                        onmouseout="this.style.borderColor='var(--border)'; this.style.background='var(--bg-elevated)';"
+                    >
+                        <!-- Image Preview if chosen -->
+                        <template x-if="addImagePreview">
+                            <div class="w-full h-full relative">
+                                <img :src="addImagePreview"
+                                     style="width: 130px; height: 130px; object-fit: cover;"
+                                     class="rounded-2xl">
+                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-2">
+                                    <svg class="w-5 h-5 text-white mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <span class="text-[10px] font-bold text-white uppercase tracking-wider">Change</span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Empty Placeholder State -->
+                        <template x-if="!addImagePreview">
+                            <div class="text-center p-3 space-y-1.5 flex flex-col items-center justify-center">
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center"
+                                     style="background: rgba(159, 18, 18, 0.1); color: #dc2626;">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </div>
+                                <span class="text-[11px] font-bold block" style="color: var(--brand);">Upload Photo</span>
+                                <span class="text-[9px] block" style="color: var(--text-muted);">Max 2MB</span>
+                            </div>
+                        </template>
+
+                        <input
+                            type="file"
+                            name="image"
+                            x-ref="addImageInput"
+                            @change="previewAddImage($event)"
+                            accept="image/jpeg,image/png,image/webp"
+                            class="hidden"
+                        >
                     </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Additional Name / Specs</label>
-                        <input type="text" name="additional_name" placeholder="e.g. 5W-30 Full Synthetic 4L" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    <p class="text-[11px] font-medium text-center mt-2" style="color: var(--text-muted);">Click box to upload product photo (JPG, PNG, WebP)</p>
+                </div>
+
+                <div style="border-top: 1px solid var(--border);"></div>
+
+                <!-- Form Fields with Generous Spacing -->
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; row-gap: 34px; padding-top: 18px; padding-bottom: 8px;">
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Product Name <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="text" name="product_name" required placeholder="e.g. Alternator Carbon Brush" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
+
                     <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Category / Type *</label>
-                        <input type="text" name="type" required placeholder="Fluids, Mechanical..." class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Category / Type <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="text" name="type" required placeholder="e.g. 37A, Fluids, Filters" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-bold" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
+
                     <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Brand</label>
-                        <input type="text" name="brand" placeholder="e.g. Castrol, Bosch" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Brand / Manufacturer
+                        </label>
+                        <input type="text" name="brand" placeholder="e.g. FCC, Bosch, Petron" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
+
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Additional Specs / Sub-Name
+                        </label>
+                        <input type="text" name="additional_name" placeholder="e.g. Standard 12V 4-Pin, 5W-30 Synthetic" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
                     <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Selling Price (₱) *</label>
-                        <input type="number" step="any" name="price" required placeholder="0.00" class="w-full px-3 py-2 rounded-xl font-mono text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Selling Price (₱) <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="number" step="any" name="price" required placeholder="0.00" class="w-full px-4 py-2.5 rounded-xl font-mono font-bold text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
+
                     <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Initial Quantity *</label>
-                        <input type="number" name="quantity" required value="10" min="0" class="w-full px-3 py-2 rounded-xl font-mono text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Initial Quantity <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="number" name="quantity" required value="10" min="0" class="w-full px-4 py-2.5 rounded-xl font-mono font-bold text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Store / Shelf Location</label>
-                        <input type="text" name="location" placeholder="e.g. Shelf B-2 or Rack A-1" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Store / Shelf Location
+                        </label>
+                        <input type="text" name="location" placeholder="e.g. Shelf B1, Rack 2" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Description / Notes</label>
-                        <textarea name="description" rows="2" placeholder="Part specifications..." class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';"></textarea>
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Product Image <span style="color: var(--text-muted); font-weight: 400;">(JPG/PNG/WebP, max 2MB)</span></label>
-                        <input type="file" name="image" accept="image/jpeg,image/png,image/webp"
-                               class="w-full text-xs rounded-xl px-3 py-2 cursor-pointer transition"
-                               style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;"
-                               onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Description / Notes
+                        </label>
+                        <textarea name="description" rows="2" placeholder="Compatibility or warranty details..." class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';"></textarea>
                     </div>
                 </div>
+
                 <div class="pt-3 flex items-center justify-end space-x-2" style="border-top: 1px solid var(--border);">
-                    <button type="button" @click="showAddModal = false" class="px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);">Cancel</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl text-white font-bold text-xs transition bg-brand hover:opacity-90">Add to Catalog</button>
+                    <button type="button" @click="showAddModal = false" class="px-4 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-white font-extrabold text-xs transition bg-brand hover:opacity-90 shadow-md shadow-red-600/25 cursor-pointer">Add Part to Catalog</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal: Edit Product -->
-    <div x-show="showEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm" style="background: rgba(0,0,0,0.5);">
-        <div class="rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4" style="background: var(--bg-surface); border: 1px solid var(--border);">
+    <div x-show="showEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm" style="background: rgba(0,0,0,0.65);">
+        <div class="rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto" style="background: var(--bg-surface); border: 1px solid var(--border);">
             <div class="flex items-center justify-between pb-3" style="border-bottom: 1px solid var(--border);">
-                <h3 class="text-base font-bold" style="color: var(--text-primary);">Edit Product</h3>
+                <div>
+                    <h3 class="text-base font-extrabold" style="color: var(--text-primary);">Edit Product</h3>
+                    <p class="text-xs" style="color: var(--text-muted);" x-text="'Updating #' + (editItem.product_id || '') + ' - ' + (editItem.product_name || '')"></p>
+                </div>
                 <button @click="showEditModal = false" style="color: var(--text-muted);"
                         onmouseover="this.style.color='var(--text-primary)';"
                         onmouseout="this.style.color='var(--text-muted)';">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-            <form :action="'/inventory/' + editItem.product_id" method="POST" enctype="multipart/form-data" class="space-y-3 text-xs">
+
+            <form :action="'/inventory/' + editItem.product_id" method="POST" enctype="multipart/form-data" class="space-y-4 text-xs">
                 @csrf
                 @method('PUT')
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Product Name *</label>
-                        <input type="text" name="product_name" x-model="editItem.product_name" required class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Additional Name / Specs</label>
-                        <input type="text" name="additional_name" x-model="editItem.additional_name" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Category / Type *</label>
-                        <input type="text" name="type" x-model="editItem.type" required class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Brand</label>
-                        <input type="text" name="brand" x-model="editItem.brand" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Price (₱) *</label>
-                        <input type="number" step="any" name="price" x-model="editItem.price" required class="w-full px-3 py-2 rounded-xl font-mono text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Current Quantity *</label>
-                        <input type="number" name="quantity" x-model="editItem.quantity" required min="0" class="w-full px-3 py-2 rounded-xl font-mono text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Shelf Location</label>
-                        <input type="text" name="location" x-model="editItem.location" class="w-full px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1" style="color: var(--text-secondary);">Product Image <span style="color: var(--text-muted); font-weight: 400;">(leave blank to keep current)</span></label>
-                        <div class="flex items-center gap-3">
-                            <img :src="editItem.image ? ('/' + editItem.image).replace('//', '/') : '/images/products/default.svg'"
-                                 class="w-12 h-12 rounded-xl object-cover flex-shrink-0 border p-1"
-                                 style="background: var(--bg-base); border-color: var(--border);"
-                                 onerror="this.src='/images/products/default.svg'">
-                            <input type="file" name="image" accept="image/jpeg,image/png,image/webp"
-                                   class="flex-1 text-xs rounded-xl px-3 py-2 cursor-pointer transition"
-                                   style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;"
-                                   onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+
+                <!-- Fixed-Dimension Centered Image Edit Square -->
+                <div class="flex flex-col items-center justify-center pt-1 pb-2">
+                    <div
+                        @click="$refs.editImageInput.click()"
+                        class="rounded-2xl border-2 border-dashed flex items-center justify-center cursor-pointer transition-all relative overflow-hidden group shadow-sm"
+                        style="width: 130px; height: 130px; background: var(--bg-elevated); border-color: var(--border);"
+                        onmouseover="this.style.borderColor='var(--brand)'; this.style.background='var(--bg-base)';"
+                        onmouseout="this.style.borderColor='var(--border)'; this.style.background='var(--bg-elevated)';"
+                    >
+                        <img :src="editImagePreview || '/images/products/default.svg'"
+                             style="width: 130px; height: 130px; object-fit: cover;"
+                             class="rounded-2xl transition group-hover:scale-105"
+                             onerror="this.src='/images/products/default.svg'">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-2">
+                            <svg class="w-5 h-5 text-white mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">Change Photo</span>
                         </div>
+
+                        <input
+                            type="file"
+                            name="image"
+                            x-ref="editImageInput"
+                            @change="previewEditImage($event)"
+                            accept="image/jpeg,image/png,image/webp"
+                            class="hidden"
+                        >
+                    </div>
+                    <p class="text-[11px] font-medium text-center mt-2" style="color: var(--text-muted);">Click box to change photo (JPG, PNG, WebP)</p>
+                </div>
+
+                <div style="border-top: 1px solid var(--border);"></div>
+
+                <!-- Form Fields with Generous Spacing -->
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; row-gap: 34px; padding-top: 18px; padding-bottom: 8px;">
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Product Name <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="text" name="product_name" x-model="editItem.product_name" required class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Category / Type <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="text" name="type" x-model="editItem.type" required class="w-full px-4 py-2.5 rounded-xl text-xs transition font-bold" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Brand / Manufacturer
+                        </label>
+                        <input type="text" name="brand" x-model="editItem.brand" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Additional Specs / Sub-Name
+                        </label>
+                        <input type="text" name="additional_name" x-model="editItem.additional_name" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Selling Price (₱) <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="number" step="any" name="price" x-model="editItem.price" required class="w-full px-4 py-2.5 rounded-xl font-mono font-bold text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Current Quantity <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input type="number" name="quantity" x-model="editItem.quantity" required min="0" class="w-full px-4 py-2.5 rounded-xl font-mono font-bold text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
+                    </div>
+
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 4px;">
+                            Store / Shelf Location
+                        </label>
+                        <input type="text" name="location" x-model="editItem.location" class="w-full px-4 py-2.5 rounded-xl text-xs transition font-medium" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); outline: none;" onfocus="this.style.borderColor='var(--brand)';" onblur="this.style.borderColor='var(--border)';">
                     </div>
                 </div>
+
                 <div class="pt-3 flex items-center justify-end space-x-2" style="border-top: 1px solid var(--border);">
-                    <button type="button" @click="showEditModal = false" class="px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);">Cancel</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl text-white font-bold text-xs transition bg-brand hover:opacity-90">Save Changes</button>
+                    <button type="button" @click="showEditModal = false" class="px-4 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-white font-extrabold text-xs transition bg-brand hover:opacity-90 shadow-md shadow-red-600/25 cursor-pointer">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -408,8 +527,8 @@
                            onblur="this.style.borderColor='var(--border)';">
                 </div>
                 <div class="pt-2 flex items-center justify-end space-x-2" style="border-top: 1px solid var(--border);">
-                    <button type="button" @click="showRestockModal = false" class="px-3 py-2 rounded-xl text-xs transition" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);">Cancel</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl text-white font-bold text-xs bg-emerald-600 hover:bg-emerald-500 transition">Confirm Restock</button>
+                    <button type="button" @click="showRestockModal = false" class="px-3 py-2 rounded-xl text-xs transition cursor-pointer" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);">Cancel</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl text-white font-bold text-xs bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer">Confirm Restock</button>
                 </div>
             </form>
         </div>
@@ -424,9 +543,38 @@ function inventoryManager() {
         showRestockModal: false,
         editItem: {},
         restockItem: {},
-        openAddModal()    { this.showAddModal = true; },
-        openEditModal(p)  { this.editItem = Object.assign({}, p); this.showEditModal = true; },
-        openRestockModal(p) { this.restockItem = Object.assign({}, p); this.showRestockModal = true; }
+        addImagePreview: null,
+        editImagePreview: null,
+
+        openAddModal() {
+            this.addImagePreview = null;
+            this.showAddModal = true;
+        },
+
+        openEditModal(p) {
+            this.editItem = Object.assign({}, p);
+            this.editImagePreview = p.image ? ('/' + p.image).replace(/^\/+/, '/') : null;
+            this.showEditModal = true;
+        },
+
+        openRestockModal(p) {
+            this.restockItem = Object.assign({}, p);
+            this.showRestockModal = true;
+        },
+
+        previewAddImage(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.addImagePreview = URL.createObjectURL(file);
+            }
+        },
+
+        previewEditImage(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.editImagePreview = URL.createObjectURL(file);
+            }
+        }
     };
 }
 </script>

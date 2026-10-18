@@ -1,0 +1,168 @@
+PHPUnit 12.5.35 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.10
+Configuration: /var/www/html/phpunit.xml
+
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\AuditLogUnitTest[39m
+  [32;1m✓[39;22m[90m [39m[90maudit log record helper creates entry with explicit actor[39m[90m           [39m [90m0.76s[39m  
+  [32;1m✓[39;22m[90m [39m[90maudit log uses authenticated user name by default[39m[90m                   [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90maudit log falls back to system when unauthenticated[39m[90m                 [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\ExampleTest[39m
+  [32;1m✓[39;22m[90m [39m[90mthat true is true[39m[90m                                                   [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\InvoiceUnitTest[39m
+  [32;1m✓[39;22m[90m [39m[90minvoice attributes and decimal casts[39m[90m                                [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90minvoice belongs to user[39m[90m                                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90minvoice has many sales relationship[39m[90m                                 [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\PosCalculationUnitTest[39m
+  [32;1m✓[39;22m[90m [39m[90mline item subtotal calculation and rounding[39m[90m                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer change calculation[39m[90m                                         [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90minsufficient payment detection[39m[90m                                      [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90minventory decrement math[39m[90m                                            [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\ProductUnitTest[39m
+  [32;1m✓[39;22m[90m [39m[90mproduct attributes and type casting[39m[90m                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mscope low stock filters products at or below threshold[39m[90m              [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mscope low stock respects custom threshold[39m[90m                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mproduct has many sales relationship[39m[90m                                 [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\AuthenticationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mlogin screen can be rendered[39m[90m                                        [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can authenticate using the login screen[39m[90m                       [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can not authenticate with invalid password[39m[90m                    [39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can logout[39m[90m                                                    [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\EmailVerificationTest[39m
+  [32;1m✓[39;22m[90m [39m[90memail verification screen can be rendered[39m[90m                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail can be verified[39m[90m                                               [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail is not verified with invalid hash[39m[90m                             [39m [90m0.04s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordConfirmationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mconfirm password screen can be rendered[39m[90m                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword can be confirmed[39m[90m                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword is not confirmed with invalid password[39m[90m                     [39m [90m0.22s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordResetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mreset password link screen can be rendered[39m[90m                          [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mreset password link can be requested[39m[90m                                [39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[90mreset password screen can be rendered[39m[90m                               [39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword can be reset with valid token[39m[90m                              [39m [90m0.24s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordUpdateTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpassword can be updated[39m[90m                                             [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcorrect password must be provided to update password[39m[90m                [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\RegistrationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mregistration screen can be rendered[39m[90m                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnew users can register[39m[90m                                              [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\AutosupplySystemTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguest is redirected to login[39m[90m                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90muser can login with username[39m[90m                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated user can view dashboard[39m[90m                               [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated user can view inventory and add product[39m[90m               [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpos checkout creates invoice and deducts stock[39m[90m                      [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90muser can view sales records and audit trail[39m[90m                         [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpos checkout fails when payment is insufficient[39m[90m                     [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpos checkout fails when stock is insufficient[39m[90m                       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90minventory store validates required fields[39m[90m                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpos checkout consolidates duplicate items and prevents oversell[39m[90m     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpos checkout consolidates duplicate items and deducts accurately[39m[90m    [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\ExampleTest[39m
+  [32;1m✓[39;22m[90m [39m[90mthe application returns a successful response[39m[90m                       [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\ProfileTest[39m
+  [32;1m✓[39;22m[90m [39m[90mprofile page is displayed[39m[90m                                           [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprofile information can be updated[39m[90m                                  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail verification status is unchanged when the email address is un[39m[90m…[39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90muser can delete their account[39m[90m                                       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcorrect password must be provided to delete account[39m[90m                 [39m [90m0.02s[39m  
+
+  [90mTests:[39m    [32;1m50 passed[39;22m[90m (139 assertions)[39m
+  [90mDuration:[39m [39m3.48s[39m
+
+Time: 00:03.018, Memory: 64.50 MB
+
+[4mAudit Log Unit (Tests\Unit\AuditLogUnit)[0m
+[32m ✔ [0mAudit log record helper creates entry with explicit actor
+[32m ✔ [0mAudit log uses authenticated user name by default
+[32m ✔ [0mAudit log falls back to system when unauthenticated
+
+[4mAuthentication (Tests\Feature\Auth\Authentication)[0m
+[32m ✔ [0mLogin screen can be rendered
+[32m ✔ [0mUsers can authenticate using the login screen
+[32m ✔ [0mUsers can not authenticate with invalid password
+[32m ✔ [0mUsers can logout
+
+[4mAutosupply System (Tests\Feature\AutosupplySystem)[0m
+[32m ✔ [0mGuest is redirected to login
+[32m ✔ [0mUser can login with username
+[32m ✔ [0mAuthenticated user can view dashboard
+[32m ✔ [0mAuthenticated user can view inventory and add product
+[32m ✔ [0mPos checkout creates invoice and deducts stock
+[32m ✔ [0mUser can view sales records and audit trail
+[32m ✔ [0mPos checkout fails when payment is insufficient
+[32m ✔ [0mPos checkout fails when stock is insufficient
+[32m ✔ [0mInventory store validates required fields
+[32m ✔ [0mPos checkout consolidates duplicate items and prevents oversell
+[32m ✔ [0mPos checkout consolidates duplicate items and deducts accurately
+
+[4mEmail Verification (Tests\Feature\Auth\EmailVerification)[0m
+[32m ✔ [0mEmail verification screen can be rendered
+[32m ✔ [0mEmail can be verified
+[32m ✔ [0mEmail is not verified with invalid hash
+
+[4mExample (Tests\Feature\Example)[0m
+[32m ✔ [0mThe application returns a successful response
+
+[4mExample (Tests\Unit\Example)[0m
+[32m ✔ [0mThat true is true
+
+[4mInvoice Unit (Tests\Unit\InvoiceUnit)[0m
+[32m ✔ [0mInvoice attributes and decimal casts
+[32m ✔ [0mInvoice belongs to user
+[32m ✔ [0mInvoice has many sales relationship
+
+[4mPassword Confirmation (Tests\Feature\Auth\PasswordConfirmation)[0m
+[32m ✔ [0mConfirm password screen can be rendered
+[32m ✔ [0mPassword can be confirmed
+[32m ✔ [0mPassword is not confirmed with invalid password
+
+[4mPassword Reset (Tests\Feature\Auth\PasswordReset)[0m
+[32m ✔ [0mReset password link screen can be rendered
+[32m ✔ [0mReset password link can be requested
+[32m ✔ [0mReset password screen can be rendered
+[32m ✔ [0mPassword can be reset with valid token
+
+[4mPassword Update (Tests\Feature\Auth\PasswordUpdate)[0m
+[32m ✔ [0mPassword can be updated
+[32m ✔ [0mCorrect password must be provided to update password
+
+[4mPos Calculation Unit (Tests\Unit\PosCalculationUnit)[0m
+[32m ✔ [0mLine item subtotal calculation and rounding
+[32m ✔ [0mCustomer change calculation
+[32m ✔ [0mInsufficient payment detection
+[32m ✔ [0mInventory decrement math
+
+[4mProduct Unit (Tests\Unit\ProductUnit)[0m
+[32m ✔ [0mProduct attributes and type casting
+[32m ✔ [0mScope low stock filters products at or below threshold
+[32m ✔ [0mScope low stock respects custom threshold
+[32m ✔ [0mProduct has many sales relationship
+
+[4mProfile (Tests\Feature\Profile)[0m
+[32m ✔ [0mProfile page is displayed
+[32m ✔ [0mProfile information can be updated
+[32m ✔ [0mEmail verification status is unchanged when the email address is unchanged
+[32m ✔ [0mUser can delete their account
+[32m ✔ [0mCorrect password must be provided to delete account
+
+[4mRegistration (Tests\Feature\Auth\Registration)[0m
+[32m ✔ [0mRegistration screen can be rendered
+[32m ✔ [0mNew users can register
+
+[30;42mOK (50 tests, 139 assertions)[0m

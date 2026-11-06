@@ -9,8 +9,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        DB::statement('DROP VIEW IF EXISTS newsales');
         DB::statement('
-            CREATE OR REPLACE VIEW newsales AS
+            CREATE VIEW newsales AS
             SELECT 
                 s.sales_id,
                 s.invoice_id,

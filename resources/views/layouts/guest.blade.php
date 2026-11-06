@@ -70,7 +70,7 @@
     <div class="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 relative">
 
         <!-- Left Supercar Hero Section (Desktop) -->
-        <div class="hidden lg:flex lg:col-span-7 relative flex-col justify-between p-12 overflow-hidden select-none bg-neutral-100 dark:bg-[#09090b]">
+        <div class="hidden lg:flex lg:col-span-7 relative flex-col justify-end p-12 overflow-hidden select-none bg-neutral-100 dark:bg-[#09090b]">
 
             <!-- Background Supercar Images (Adaptive to Theme) -->
             <!-- Dark Mode Hero: Ford GT Moody Crimson Studio -->
@@ -87,17 +87,6 @@
             <div class="hidden dark:block absolute inset-0 car-hero-overlay-dark pointer-events-none"></div>
             <div class="block dark:hidden absolute inset-0 car-hero-overlay-light pointer-events-none"></div>
 
-            <!-- Top Pill Badge -->
-            <div class="relative z-10 flex items-center space-x-3">
-                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest backdrop-blur-md bg-red-600/10 dark:bg-red-950/40 border border-red-600/30 dark:border-red-500/40 text-red-700 dark:text-red-400 shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-red-600 mr-2 animate-ping"></span>
-                    <span>Engineered For Performance</span>
-                </span>
-                <span class="text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-400">
-                    AMS Enterprise v2.4
-                </span>
-            </div>
-
             <!-- Bottom Supercar Showcase Content -->
             <div class="relative z-10 max-w-xl space-y-4 pt-16">
                 <div>
@@ -112,22 +101,6 @@
                 <p class="text-sm font-bold text-neutral-800 dark:text-neutral-300 leading-relaxed max-w-lg hero-body-shadow">
                     Precision inventory control, high-speed POS ticketing, and certified automotive replacement parts for Toyota, Mitsubishi, Isuzu, and Honda.
                 </p>
-
-                <!-- Automotive Feature Badges -->
-                <div class="flex flex-wrap gap-2.5 pt-2">
-                    <span class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-black text-neutral-900 dark:text-neutral-200 bg-white/95 dark:bg-neutral-900/80 border border-neutral-300 dark:border-white/10 shadow-sm backdrop-blur-md">
-                        <svg class="w-3.5 h-3.5 text-red-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        Thermal-Ready POS
-                    </span>
-                    <span class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-black text-neutral-900 dark:text-neutral-200 bg-white/95 dark:bg-neutral-900/80 border border-neutral-300 dark:border-white/10 shadow-sm backdrop-blur-md">
-                        <svg class="w-3.5 h-3.5 text-red-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                        Real-Time Stock Alerts
-                    </span>
-                    <span class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-black text-neutral-900 dark:text-neutral-200 bg-white/95 dark:bg-neutral-900/80 border border-neutral-300 dark:border-white/10 shadow-sm backdrop-blur-md">
-                        <svg class="w-3.5 h-3.5 text-red-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        Role-Based Access
-                    </span>
-                </div>
             </div>
         </div>
 

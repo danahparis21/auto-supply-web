@@ -17,6 +17,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        [x-cloak] { display: none !important; }
+
         /* Base font */
         body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
 
@@ -229,7 +231,7 @@
         </nav>
 
         <!-- User Profile & Logout — ALWAYS VISIBLE at bottom -->
-        <div class="p-3 flex-shrink-0" style="border-top: 1px solid var(--sidebar-border); background: var(--sidebar-bg);">
+        <div x-data="{ showLogoutModal: false }" class="p-3 flex-shrink-0" style="border-top: 1px solid var(--sidebar-border); background: var(--sidebar-bg);">
             <div class="flex items-center justify-between p-2.5 rounded-xl"
                  style="background: var(--bg-elevated); border: 1px solid var(--border);">
                 <div class="flex items-center space-x-3 overflow-hidden">
@@ -248,21 +250,63 @@
                     </div>
                 </div>
 
-                <!-- Logout button -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit"
-                            id="logout-btn"
-                            title="Log Out"
-                            class="p-1.5 rounded-lg transition-colors"
-                            style="color: var(--text-muted);"
-                            onmouseover="this.style.color='#9f1212';this.style.background='rgba(159,18,18,0.1)';"
-                            onmouseout="this.style.color='var(--text-muted)';this.style.background='transparent';">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                    </button>
-                </form>
+                <!-- Logout trigger button -->
+                <button type="button"
+                        @click="showLogoutModal = true"
+                        id="logout-btn"
+                        title="Log Out"
+                        class="p-1.5 rounded-lg transition-colors cursor-pointer"
+                        style="color: var(--text-muted);"
+                        onmouseover="this.style.color='#9f1212';this.style.background='rgba(159,18,18,0.1)';"
+                        onmouseout="this.style.color='var(--text-muted)';this.style.background='transparent';">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logout Confirmation Modal -->
+            <div x-show="showLogoutModal"
+                 x-cloak
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+                 style="background: rgba(0,0,0,0.65);"
+                 @keydown.escape.window="showLogoutModal = false">
+                <div @click.away="showLogoutModal = false"
+                     class="rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4"
+                     style="background: var(--bg-surface); border: 1px solid var(--border);">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                             style="background: rgba(159,18,18,0.15); border: 1px solid rgba(159,18,18,0.3); color: #dc2626;">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold" style="color: var(--text-primary);">Confirm Logout</h3>
+                            <p class="text-xs" style="color: var(--text-muted);">Are you sure you want to log out?</p>
+                        </div>
+                    </div>
+                    <p class="text-xs leading-relaxed" style="color: var(--text-secondary);">
+                        You will be returned to the sign-in screen. Any unsaved changes in progress may be lost.
+                    </p>
+                    <div class="pt-3 flex items-center justify-end space-x-2" style="border-top: 1px solid var(--border);">
+                        <button type="button"
+                                @click="showLogoutModal = false"
+                                class="px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer"
+                                style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);"
+                                onmouseover="this.style.color='var(--text-primary)';"
+                                onmouseout="this.style.color='var(--text-secondary)';">
+                            Cancel
+                        </button>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                    class="px-4 py-2 rounded-xl text-white font-bold text-xs bg-red-600 hover:bg-red-700 transition cursor-pointer shadow-md">
+                                Yes, Log Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </aside>

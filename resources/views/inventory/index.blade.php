@@ -227,18 +227,15 @@
                                             onmouseout="this.style.color='var(--text-muted)';">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
-                                    <form method="POST" action="{{ route('inventory.destroy', $product->product_id) }}"
-                                          onsubmit="return confirm('Delete {{ addslashes($product->product_name) }}?');" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" title="Delete"
-                                                class="p-1.5 rounded-lg transition"
-                                                style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-muted);"
-                                                onmouseover="this.style.color='var(--brand)';"
-                                                onmouseout="this.style.color='var(--text-muted)';">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                            @click="openDeleteModal({{ json_encode($product) }})"
+                                            title="Delete Product"
+                                            class="p-1.5 rounded-lg transition cursor-pointer"
+                                            style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-muted);"
+                                            onmouseover="this.style.color='#dc2626';this.style.borderColor='rgba(220,38,38,0.4)';"
+                                            onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border)';">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -533,6 +530,58 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal: Delete Product Confirmation -->
+    <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm" style="background: rgba(0,0,0,0.65);" @keydown.escape.window="showDeleteModal = false">
+        <div @click.away="showDeleteModal = false" class="rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4" style="background: var(--bg-surface); border: 1px solid var(--border);">
+            <div class="flex items-center space-x-3.5 pb-3" style="border-bottom: 1px solid var(--border);">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                     style="background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.3); color: #dc2626;">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold" style="color: var(--text-primary);">Delete Product</h3>
+                    <p class="text-xs" style="color: var(--text-muted);">Confirm removal from catalog</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <p style="color: var(--text-secondary);">
+                    Are you sure you want to permanently delete this product?
+                </p>
+
+                <!-- Product Preview Card -->
+                <div class="p-3.5 rounded-xl space-y-1.5" style="background: var(--bg-elevated); border: 1px solid var(--border);">
+                    <div class="font-bold text-sm" style="color: var(--text-primary);" x-text="deleteItem.product_name"></div>
+                    <div class="flex items-center space-x-3 text-xs" style="color: var(--text-muted);">
+                        <span>SKU: <strong class="font-mono text-xs" style="color: var(--text-secondary);" x-text="deleteItem.sku || 'N/A'"></strong></span>
+                        <span>•</span>
+                        <span>Stock: <strong class="font-mono text-xs" style="color: var(--text-secondary);" x-text="(deleteItem.quantity || 0) + ' units'"></strong></span>
+                        <span>•</span>
+                        <span>Price: <strong class="font-mono text-xs" style="color: var(--text-secondary);" x-text="'₱' + Number(deleteItem.selling_price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></strong></span>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-xl flex items-start space-x-2 text-[11px]" style="background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); color: #dc2626;">
+                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>This action is permanent and cannot be undone. Historical transaction records will preserve sales references.</span>
+                </div>
+            </div>
+
+            <form :action="'/inventory/' + deleteItem.product_id" method="POST" class="pt-2 flex items-center justify-end space-x-2" style="border-top: 1px solid var(--border);">
+                @csrf
+                @method('DELETE')
+                <button type="button" @click="showDeleteModal = false" class="px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer" style="background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)';" onmouseout="this.style.color='var(--text-secondary)';">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 rounded-xl text-white font-bold text-xs bg-red-600 hover:bg-red-700 transition cursor-pointer shadow-md">
+                    Yes, Delete Product
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -541,8 +590,10 @@ function inventoryManager() {
         showAddModal: false,
         showEditModal: false,
         showRestockModal: false,
+        showDeleteModal: false,
         editItem: {},
         restockItem: {},
+        deleteItem: {},
         addImagePreview: null,
         editImagePreview: null,
 
@@ -560,6 +611,11 @@ function inventoryManager() {
         openRestockModal(p) {
             this.restockItem = Object.assign({}, p);
             this.showRestockModal = true;
+        },
+
+        openDeleteModal(p) {
+            this.deleteItem = Object.assign({}, p);
+            this.showDeleteModal = true;
         },
 
         previewAddImage(e) {

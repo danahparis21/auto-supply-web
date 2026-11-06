@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # ── Stage 2: PHP Application Server ───────────────────
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # Install required system packages and PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
